@@ -1,0 +1,14 @@
+#define CONTROLLER_ID "3"
+#define BAUD 9600
+#define ONE_WIRE_BUS 25
+#define ESSID "xxxxxxxxx"
+#define WEP_KEY "xxxxxxxx"
+#define WEB_SERVER_ADDRESS "xxxx.xxxxx.nu" // XX,XXX,XXX,XXX
+#define WEB_SERVER_PORT 443
+#define MQTT_SERVER XXX,XXX,XX,XXX
+#define MQTT_PORT 1883                        
+#define MQTT_TOPIC "sensors/T/esp32/" CONTROLLER_ID
+#define LOOP_PERIOD 60
+
+#define WEB_BASIC_AUTH  "xxxxxxxxxxxxxxx="   // create e.g. with:
+                                             // echo -n 'user:pass' | base64

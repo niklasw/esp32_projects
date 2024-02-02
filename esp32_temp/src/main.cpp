@@ -1,0 +1,44 @@
+
+#include <Arduino.h>
+#include <OneWire.h>
+#include "mywifi.h"
+#include "config.h"
+#include "mqtt.h"
+#include "TSensors.h"
+
+int count = 0;
+
+IPAddress server(MQTT_SERVER);
+TSensors* tsPtr;
+
+void setup(void)
+{
+    Serial.begin(BAUD);
+    wifi_setup(ESSID, WEP_KEY);
+    mqtt_setup(server, MQTT_PORT);
+
+    tsPtr = new TSensors(ONE_WIRE_BUS);
+    tsPtr->mkTopics(MQTT_TOPIC);
+}
+
+void loop(void)
+{
+    wifi_keep_connected();
+
+    tsPtr->info();
+
+    tsPtr->requestTemperatures();
+
+    if (tsPtr->nSensors() > 0)
+    {
+        for (int i=0; i < tsPtr->nSensors(); i++)
+        {
+            mqtt_pub(tsPtr->topic(i).c_str(), tsPtr->mkMessage(i).c_str());
+            tsPtr->info(i);
+        }
+    }
+
+    Serial.println("Sleeping");
+
+    delay(LOOP_PERIOD*1000);
+}

@@ -1,0 +1,15 @@
+/* 
+Copy this file to config.h and insert ESSID, WEP_KEY
+and mqtt server settings
+*/
+
+#define CONTROLLER_ID "1"
+#define BAUD 9600
+#define ONE_WIRE_BUS 2             // Can be pin 0..32 I think
+#define ESSID "xxxxxxxxx"
+#define WEP_KEY "xxxxxxxx"
+#define MQTT_SERVER 192,168,xx,xx  // Use commas and no white space
+                                   // ...see mqtt.h
+#define MQTT_PORT 1883                        
+#define MQTT_TOPIC "sensors/T/esp32/" CONTROLLER_ID
+#define LOOP_PERIOD 30
