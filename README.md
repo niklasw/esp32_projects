@@ -1,2 +1,2 @@
 # esp32_projects
-A backup of my Arduino escapades
+(Merely backup of my Arduino escapades)
