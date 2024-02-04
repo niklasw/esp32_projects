@@ -11,6 +11,10 @@ TSensors* tsPtr;
 
 String apiTarget = "/api/strudeviken?measurement=";
 
+int loopCount = 0;
+
+void(* resetFunc) (void) = 0;
+
 void setup() {
     Serial.begin(BAUD);
     wifi_setup(ESSID, WEP_KEY);
@@ -40,17 +44,23 @@ void loop() {
         );
     }
 
-    String apiRequest = apiTarget + "nsensors&value=" + tsPtr->nSensors();
+    // Sending some info, like a heart beat, every now and then
 
-    String reply = httpRequest
-    (
-        httpsServer,
-        httpsPort,
-        apiRequest.c_str(),
-        WEB_BASIC_AUTH
-    );
+    if (loopCount % 100 == 0)
+    {
+        String apiRequest = apiTarget + "nsensors&value=" + tsPtr->nSensors();
 
-    Serial.println(reply);
+        String reply = httpRequest
+        (
+            httpsServer,
+            httpsPort,
+            apiRequest.c_str(),
+            WEB_BASIC_AUTH
+        );
+        Serial.println(reply);
+    }
+
+    loopCount++;
 
     delay(LOOP_PERIOD*1000);
 }

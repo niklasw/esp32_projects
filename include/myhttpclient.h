@@ -2,7 +2,27 @@
 #include "mywifi.h"
 #include <WiFiClientSecure.h>
 
-WiFiClientSecure client;
+
+String httpConsumeHeader(WiFiClientSecure* client)
+{
+    String header = "";
+    while (client->connected())
+    {
+        String line = client->readStringUntil('\n');
+        if (line == "\r")
+        {
+            Serial.println("Hdrs ok");
+            break;
+        }
+        else
+        {
+            header = line;
+        }
+        delay(10);
+    }
+    return header;
+}
+
 
 String httpRequest(const char* host,
                  uint16_t port,
@@ -10,6 +30,8 @@ String httpRequest(const char* host,
                  const char* basicAuth,
                  const char* method = "GET")
 {
+    WiFiClientSecure client;
+
     client.setInsecure();
 
     String reply;
@@ -26,16 +48,9 @@ String httpRequest(const char* host,
         client.println(host);
         client.println("Connection: close");
         client.println();
-        while (client.connected())
-        {
-            String line = client.readStringUntil('\n');
-            if (line == "\r")
-            {
-                Serial.println("headers received");
-                break;
-            }
-            delay(10);
-        }
+
+        String header = httpConsumeHeader(&client);
+
         while (client.available())
         {
             char c = client.read();
